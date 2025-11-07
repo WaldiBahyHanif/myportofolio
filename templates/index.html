@@ -1,0 +1,54 @@
+{% extends "layout.html" %} {% block title %}Portfolio Saya{% endblock %} {%
+block content %} {% if profile %}
+<section id="profile">
+  <h2>{{ profile['name'] }}</h2>
+  {% if profile['photo'] %}
+  <div class="profile-pic-container">
+    <img
+      src="{{ url_for('static', filename='uploads/' + profile['photo']) }}"
+      alt="Foto Profil"
+    />
+  </div>
+  {% endif %}
+  <p style="white-space: pre-wrap">{{ profile['bio'] }}</p>
+</section>
+{% endif %}
+
+<section id="skills">
+  <h2>Skills</h2>
+  <div class="grid">
+    {% for skill in skills %}
+    <div class="card">
+      <h3><i class="{{ skill['icon'] }}"></i> {{ skill['name'] }}</h3>
+      <div class="skill-bar">
+        <div class="skill-level" style="width: {{ skill['level'] }}%;">
+          {{ skill['level'] }}%
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section id="projects">
+  <h2>Projects</h2>
+  <div class="grid">
+    {% for project in projects %}
+    <div class="card">
+      {% if project['image'] %}
+      <img
+        src="{{ url_for('static', filename='uploads/' + project['image']) }}"
+        alt="{{ project['title'] }}"
+      />
+      {% endif %}
+      <h3>{{ project['title'] }}</h3>
+      <p>{{ project['description'] }}</p>
+      {% if project['link'] %}
+      <a href="{{ project['link'] }}" target="_blank">Lihat Proyek</a>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% endblock %}

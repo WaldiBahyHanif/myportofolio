@@ -1,0 +1,44 @@
+{% extends "layout.html" %} {% block title %}Edit Skill{% endblock %} {% block
+content %}
+<h2>Edit Skill: {{ skill['name'] }}</h2>
+
+<form method="POST" action="{{ url_for('update_skill', id=skill['id']) }}">
+  <div>
+    <label for="name">Nama Skill</label>
+    <input
+      type="text"
+      id="name"
+      name="name"
+      value="{{ skill['name'] }}"
+      required
+    />
+  </div>
+  <div>
+    <label for="level">Level (0-100)</label>
+    <input
+      type="number"
+      id="level"
+      name="level"
+      value="{{ skill['level'] }}"
+      required
+    />
+  </div>
+  <div>
+    <label for="icon">Ikon (Font Awesome)</label>
+    <input
+      type="text"
+      id="icon"
+      name="icon"
+      value="{{ skill['icon'] }}"
+      placeholder="cth: fab fa-python"
+    />
+  </div>
+
+  <button type="submit">Update Skill</button>
+  <a
+    href="{{ url_for('admin_dashboard') }}"
+    style="margin-left: 10px; color: #555"
+    >Batal</a
+  >
+</form>
+{% endblock %}

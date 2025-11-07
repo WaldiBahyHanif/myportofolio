@@ -1,0 +1,56 @@
+{% extends "layout.html" %} {% block title %}Edit Proyek{% endblock %} {% block
+content %}
+<h2>Edit Proyek: {{ project['title'] }}</h2>
+
+<form
+  method="POST"
+  action="{{ url_for('update_project', id=project['id']) }}"
+  enctype="multipart/form-data"
+>
+  <div>
+    <label for="title">Judul</label>
+    <input
+      type="text"
+      id="title"
+      name="title"
+      value="{{ project['title'] }}"
+      required
+    />
+  </div>
+  <div>
+    <label for="description">Deskripsi</label>
+    <textarea id="description" name="description" rows="5">
+{{ project['description'] }}</textarea
+    >
+  </div>
+  <div>
+    <label for="link">Link Proyek</label>
+    <input
+      type="url"
+      id="link"
+      name="link"
+      value="{{ project['link'] }}"
+      placeholder="https://..."
+    />
+  </div>
+  <div>
+    <label for="image">Gambar Proyek (Kosongkan jika tidak ingin ganti)</label>
+    {% if project['image'] %}
+    <p>Gambar saat ini: {{ project['image'] }}</p>
+    <img
+      src="{{ url_for('static', filename='uploads/' + project['image']) }}"
+      width="100"
+      alt="Gambar Proyek"
+    />
+    {% endif %}
+    <input type="file" id="image" name="image" style="margin-top: 10px" />
+  </div>
+
+  <button type="submit">Update Proyek</button>
+  <a
+    href="{{ url_for('admin_dashboard') }}"
+    style="margin-left: 10px; color: #555"
+    >Batal</a
+  >
+</form>
+{% endblock %}

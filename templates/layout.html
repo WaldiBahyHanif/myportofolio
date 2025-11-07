@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Portfolio{% endblock %}</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #067493;
+        color: #030000;
+      }
+      .container {
+        width: 90%;
+        max-width: 1000px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      /* Tambahkan ini di dalam tag <style> Anda */
+
+      #profile {
+        text-align: center; /* Menengahkan semua teks di section profil */
+      }
+
+      .profile-pic-container {
+        position: relative; /* Ini adalah wadah utama untuk layering */
+        width: 250px;
+        margin: 30px auto;
+      }
+
+      .profile-pic-container img {
+        width: 100%; /* Foto akan memenuhi wadah */
+        height: 100%; /* Foto akan memenuhi wadah */
+
+        /* INI KUNCI AGAR FOTO TIDAK GEPENG */
+        object-fit: cover;
+
+        position: relative; /* Agar foto bisa ditumpuk */
+        z-index: 2; /* Foto ada di lapisan ke-2 */
+        border-radius: 10px; /* Membuat sudut sedikit melengkung */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Bayangan halus */
+      }
+
+      /* Ini adalah elemen KOTAK HIJAU di BELAKANG */
+      .profile-pic-container::before {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #28a745; /* Ganti dengan warna hijau/biru/dll */
+        top: -15px; /* Geser 15px ke atas */
+        right: -15px; /* Geser 15px ke kanan */
+        z-index: 1; /* Taruh di lapisan ke-1 (paling belakang) */
+        border-radius: 10px;
+      }
+
+      /* Ini adalah elemen GARIS HITAM di DEPAN */
+      .profile-pic-container::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border: 3px solid #333; /* Garis batas 3px warna hitam */
+        top: 15px; /* Geser 15px ke bawah */
+        left: -15px; /* Geser 15px ke kiri */
+        z-index: 3; /* Taruh di lapisan ke-3 (paling depan) */
+        border-radius: 10px;
+      }
+      nav {
+        background: #333;
+        color: white;
+        padding: 10px 20px;
+        text-align: right;
+      }
+      nav a {
+        color: white;
+        text-decoration: none;
+        margin-left: 15px;
+      }
+      nav a:hover {
+        text-decoration: underline;
+      }
+
+      h1,
+      h2,
+      h3 {
+        color: #444;
+      }
+      h2 {
+        border-bottom: 2px solid #f9fdfc;
+        padding-bottom: 10px;
+      }
+
+      /* --- Formulir --- */
+      form {
+        margin-bottom: 20px;
+        padding: 15px;
+        border: 1px solid #098b64;
+      }
+      form label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      form input[type="text"],
+      form input[type="password"],
+      form input[type="email"],
+      form input[type="number"],
+      form input[type="url"],
+      form textarea {
+        width: 95%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #098b64;
+        border-radius: 4px;
+      }
+      form button {
+        background-color: #098b64;
+        color: rgb(247, 255, 251);
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      form button:hover {
+        background-color: #0056b3;
+      }
+
+      /* --- Notifikasi Flash --- */
+      .flash {
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 4px;
+      }
+      .flash.success {
+        background-color: #d4edda;
+        color: #155724;
+      }
+      .flash.danger {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+
+      /* --- Admin Dashboard List --- */
+      .admin-list {
+        list-style: none;
+        padding-left: 0;
+      }
+      .admin-list li {
+        padding: 10px;
+        border-bottom: 1px solid #c65a5a;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .admin-list li a {
+        color: #d9534f;
+        text-decoration: none;
+      }
+
+      /* --- Skill & Project Cards (Publik) --- */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+      }
+      .card {
+        padding: 15px;
+        border: 1px solid #ddd;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      }
+      .card img {
+        max-width: 100%;
+        height: auto;
+      }
+      .skill-bar {
+        width: 100%;
+        background-color: #eee;
+      }
+      .skill-level {
+        background-color: #067493;
+        color: white;
+        text-align: right;
+        padding: 2px 5px;
+        line-height: 1.5;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="{{ url_for('index') }}">Halaman Publik</a>
+      {% if session['is_logged_in'] %}
+      <a href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a>
+      <a href="{{ url_for('logout') }}">Logout</a>
+      {% else %}
+      <a href="{{ url_for('login') }}">Login Admin</a>
+      <a href="{{ url_for('register') }}"><b>Register Admin Baru</b></a>
+      {% endif %}
+    </nav>
+
+    <div class="container">
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <div class="flash {{ category }}">{{ message }}</div>
+      {% endfor %} {% endif %} {% endwith %} {% block content %}{% endblock %}
+    </div>
+  </body>
+</html>
